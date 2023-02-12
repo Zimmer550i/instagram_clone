@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:instagram/utils/colors.dart';
 import 'package:instagram/widgets/post_card.dart';
 import 'package:instagram/widgets/profiles_view.dart';
+import 'package:instagram/utils/my_icons.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});
@@ -22,7 +23,7 @@ class FeedScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.messenger),
+            icon: const Icon(My.messenger),
           )
         ],
       ),

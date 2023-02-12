@@ -1,7 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/models/user_model.dart';
+import 'package:instagram/providers/user_provider.dart';
+import 'package:instagram/resources/firestore_methods.dart';
 import 'package:instagram/utils/colors.dart';
 import 'package:instagram/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class PostCard extends StatefulWidget {
   final snap;
@@ -13,10 +17,12 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  var isLiked = false;
 
   @override
   Widget build(BuildContext context) {
+    final UserModel user = Provider.of<UserProvider>(context).getUser;
+    bool isLiked = widget.snap['likes'].contains(user.uid);
+
     return Container(
       color: mobileBackgroundColor,
       padding: const EdgeInsets.symmetric(
@@ -34,8 +40,8 @@ class _PostCardState extends State<PostCard> {
               children: [
                 ClipOval(
                   child: CachedNetworkImage(
-                    height: MediaQuery.of(context).size.width/10,
-                    width: MediaQuery.of(context).size.width/10,
+                    height: MediaQuery.of(context).size.width / 10,
+                    width: MediaQuery.of(context).size.width / 10,
                     fit: BoxFit.cover,
                     imageUrl: widget.snap['profImage'],
                     // placeholder: (context, url) => const CircularProgressIndicator(color: primaryColor,),
@@ -63,30 +69,31 @@ class _PostCardState extends State<PostCard> {
 
           //Image Section
           ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.width,
-              minWidth: double.infinity,
-              maxHeight: MediaQuery.of(context).size.width * 1.2,
-            ),
-            child: CachedNetworkImage(  
-              imageUrl: widget.snap['postUrl'],
-              fit: BoxFit.cover,
-            )
-          ),
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.width,
+                minWidth: double.infinity,
+                maxHeight: MediaQuery.of(context).size.width * 1.2,
+              ),
+              child: CachedNetworkImage(
+                imageUrl: widget.snap['postUrl'],
+                fit: BoxFit.cover,
+              )),
 
           //Interection Section
           Container(
             child: Row(
               children: [
                 IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isLiked = isLiked ? false : true;
-                    });
+                  onPressed: () async {
+                    await FirestoreMethods().likePost(
+                      widget.snap['postId'],
+                      user.uid,
+                      widget.snap['likes'],
+                    );
                   },
                   icon: Icon(
                     isLiked ? Icons.favorite : Icons.favorite_border_rounded,
-                    color: Colors.red,
+                    color: isLiked? Colors.red: Colors.white,
                   ),
                 ),
                 IconButton(
