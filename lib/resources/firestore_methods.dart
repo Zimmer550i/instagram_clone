@@ -18,7 +18,7 @@ class FirestoreMethods {
     String res = "Some error occured";
 
     try {
-      String postId = Uuid().v1();
+      String postId = const Uuid().v1();
       String photoUrl =
           await StorageMethods().uploadImagetoStorage('posts', file, postId);
 
@@ -59,6 +59,18 @@ class FirestoreMethods {
           },
         );
       }
+    } catch (e) {
+      res = e.toString();
+    }
+
+    return res;
+  }
+
+  Future<String> deletePost(String postId, String uid, String photoUrl) async{
+    String res = "Some Error Occured";
+    try {
+      await _firestore.collection('posts').doc(postId).delete();
+      res = await StorageMethods().deletePostPhoto(photoUrl);
     } catch (e) {
       res = e.toString();
     }

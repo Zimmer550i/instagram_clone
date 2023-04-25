@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:instagram/providers/user_provider.dart';
 import 'package:instagram/responsive/responsive_layout_screen.dart';
 import 'package:instagram/screens/login_screen.dart';
-import 'package:instagram/screens/signup_screen.dart';
 import 'package:instagram/utils/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -60,7 +59,7 @@ class MyApp extends StatelessWidget {
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(color: primaryColor),
               );
             }

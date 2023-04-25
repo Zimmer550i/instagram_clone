@@ -25,11 +25,11 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
 
     return Scaffold(
       body: PageView(
-        children: homeScreenItems,
         controller: pg,
         onPageChanged: (value) {
           _page = value;
         },
+        children: homeScreenItems,
       ),
       bottomNavigationBar: CupertinoTabBar(
         onTap: (value) {

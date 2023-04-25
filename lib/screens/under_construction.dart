@@ -1,4 +1,3 @@
-import 'package:instagram/utils/global_varriables.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 

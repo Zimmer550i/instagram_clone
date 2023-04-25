@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:instagram/screens/add_post_screen.dart';
 import 'package:instagram/screens/feed_screen.dart';
 import 'package:instagram/screens/under_construction.dart';

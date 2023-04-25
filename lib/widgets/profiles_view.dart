@@ -9,7 +9,7 @@ class ProfilesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height * 0.112,
       child: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('users').snapshots(),
@@ -17,7 +17,7 @@ class ProfilesView extends StatelessWidget {
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: CircularProgressIndicator(
+                child: const CircularProgressIndicator(
                   color: primaryColor,
                 ),
               );

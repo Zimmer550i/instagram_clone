@@ -21,4 +21,17 @@ class StorageMethods{
 
     return await snap.ref.getDownloadURL();
   }
+
+  Future<String> deletePostPhoto(String photoUrl) async{
+    String res = "Deleted!";
+
+    try {
+      Reference ref = _storage.refFromURL(photoUrl);
+      await ref.delete();
+    } catch (e) {
+      res = e.toString();
+    }
+
+    return res;
+  }
 }
