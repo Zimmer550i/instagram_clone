@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/models/user_model.dart';
 import 'package:instagram/providers/user_provider.dart';
@@ -40,13 +39,31 @@ class _PostCardState extends State<PostCard> {
             child: Row(
               children: [
                 ClipOval(
-                  child: CachedNetworkImage(
+                  child: Image.network(
+                    widget.snap['profImage'],
                     height: MediaQuery.of(context).size.width / 10,
                     width: MediaQuery.of(context).size.width / 10,
                     fit: BoxFit.cover,
-                    imageUrl: widget.snap['profImage'],
-                    // placeholder: (context, url) => const CircularProgressIndicator(color: primaryColor,),
-                    errorWidget: (context, url, error) => Text(error),
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: primaryColor,
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      }
+                    },
+                    errorBuilder: (BuildContext context, Object error,
+                        StackTrace? stackTrace) {
+                      return Text('$error');
+                    },
                   ),
                 ),
                 Expanded(
@@ -71,9 +88,10 @@ class _PostCardState extends State<PostCard> {
                                 if (user.uid == widget.snap['uid']) {
                                   Navigator.of(context).pop();
                                   showSnackBar("Deleted", context);
-                                  await FirestoreMethods()
-                                      .deletePost(widget.snap['postId'],
-                                          user.uid, widget.snap['postUrl']);
+                                  await FirestoreMethods().deletePost(
+                                      widget.snap['postId'],
+                                      user.uid,
+                                      widget.snap['postUrl']);
                                 } else {
                                   Navigator.of(context).pop();
                                   showSnackBar(
@@ -94,15 +112,16 @@ class _PostCardState extends State<PostCard> {
 
           //Image Section
           ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.width,
-                minWidth: double.infinity,
-                maxHeight: MediaQuery.of(context).size.width * 1.2,
-              ),
-              child: CachedNetworkImage(
-                imageUrl: widget.snap['postUrl'],
-                fit: BoxFit.cover,
-              )),
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.width,
+              minWidth: double.infinity,
+              maxHeight: MediaQuery.of(context).size.width * 1.2,
+            ),
+            child: Image.network(
+              widget.snap['postUrl'],
+              fit: BoxFit.cover,
+            ),
+          ),
 
           //Interection Section
           Row(

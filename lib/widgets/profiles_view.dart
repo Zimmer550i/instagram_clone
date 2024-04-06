@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/utils/colors.dart';
@@ -34,16 +33,32 @@ class ProfilesView extends StatelessWidget {
                 child: Column(
                   children: [
                     ClipOval(
-                      child: CachedNetworkImage(
+                      child: Image.network(
+                        snapshot.data!.docs[index].data()['photoUrl'],
                         height: MediaQuery.of(context).size.width / 6.1,
                         width: MediaQuery.of(context).size.width / 6.1,
                         fit: BoxFit.cover,
-                        imageUrl: snapshot.data!.docs[index].data()['photoUrl'],
-                        // placeholder: (context, url) =>
-                        //     const CircularProgressIndicator(
-                        //   color: secondaryColor,
-                        // ),
-                        errorWidget: (context, url, error) => Text(error),
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: secondaryColor,
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            );
+                          }
+                        },
+                        errorBuilder: (BuildContext context, Object error,
+                            StackTrace? stackTrace) {
+                          return const Text('Error loading image');
+                        },
                       ),
                     ),
                     Text(snapshot.data!.docs[index].data()['username'])
